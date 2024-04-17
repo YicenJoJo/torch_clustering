@@ -26,8 +26,7 @@ class PyTorchKMeans(BasicClustering):
                  max_iter=300,
                  tol=1e-4,
                  distributed=False,
-                 verbose=True,
-                 ns=None):  # 添加一个参数来传递神经网络模型
+                 verbose=True):  # 添加一个参数来传递神经网络模型
         super().__init__(n_clusters=n_clusters,
                          init=init,
                          random_state=random_state,
