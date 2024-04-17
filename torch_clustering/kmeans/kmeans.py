@@ -12,12 +12,12 @@ import numpy as np
 import torch
 import tqdm
 import torch.distributed as dist
-from ..__base__ import BasicClustering, pairwise_euclidean, pairwise_cosine
+from ..__base__ import BasicClustering, pairwise_euclidean, pairwise_cosine, pairwise_neural_distance
 from .kmeans_plus_plus import _kmeans_plusplus
 
 
 class PyTorchKMeans(BasicClustering):
-    def __init__(self,
+ def __init__(self,
                  metric='euclidean',
                  init='k-means++',
                  random_state=0,
@@ -26,7 +26,8 @@ class PyTorchKMeans(BasicClustering):
                  max_iter=300,
                  tol=1e-4,
                  distributed=False,
-                 verbose=True):
+                 verbose=True,
+                 ns=None):  # 添加一个参数来传递神经网络模型
         super().__init__(n_clusters=n_clusters,
                          init=init,
                          random_state=random_state,
@@ -35,10 +36,17 @@ class PyTorchKMeans(BasicClustering):
                          tol=tol,
                          verbose=verbose,
                          distributed=distributed)
-        self.distance_metric = {'euclidean': pairwise_euclidean, 'cosine': pairwise_cosine}[metric]
+        self.ns = ns
+        # 加入neural作为距离度量的选项
+        self.distance_metric = {
+            'euclidean': pairwise_euclidean,
+            'cosine': pairwise_cosine,
+            'neural': lambda x1, x2: pairwise_neural_distance(x1, x2, ns=self.ns)  # 使用lambda来确保ns正确传递
+        }[metric]
         # self.distance_metric = lambda a, b: torch.cdist(a, b, p=2.)
         if isinstance(self.init, (np.ndarray, torch.Tensor)): self.n_init = 1
 
+    
     def initialize(self, X: torch.Tensor, random_state: int):
         num_samples = len(X)
         if isinstance(self.init, str):
