@@ -41,9 +41,9 @@ class PyTorchKMeans(BasicClustering):
         self.distance_metric = {
             'euclidean': pairwise_euclidean,
             'cosine': pairwise_cosine,
-            'neural': pairwise_neural_distance  # 使用lambda来确保ns正确传递
+            'neural': pairwise_neural_distance 
         }[metric]
-        # self.distance_metric = lambda a, b: torch.cdist(a, b, p=2.)
+
         if isinstance(self.init, (np.ndarray, torch.Tensor)): self.n_init = 1
 
     
