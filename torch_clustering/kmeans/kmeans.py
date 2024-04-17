@@ -35,13 +35,13 @@ class PyTorchKMeans(BasicClustering):
                          max_iter=max_iter,
                          tol=tol,
                          verbose=verbose,
-                         distributed=distributed,
-                         ns = ns)
+                         distributed=distributed)
+        self.ns = ns
         # 加入neural作为距离度量的选项
         self.distance_metric = {
             'euclidean': pairwise_euclidean,
             'cosine': pairwise_cosine,
-            'neural': pairwise_neural_distance 
+            'neural': lambda x1, x2: pairwise_neural_distance(x1, x2, self.ns)  # 使用lambda确保ns正确传递
         }[metric]
 
         if isinstance(self.init, (np.ndarray, torch.Tensor)): self.n_init = 1
