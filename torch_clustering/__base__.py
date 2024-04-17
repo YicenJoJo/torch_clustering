@@ -22,7 +22,8 @@ class BasicClustering:
                  max_iter=300,
                  tol=1e-4,
                  distributed=False,
-                 verbose=True):
+                 verbose=True
+                 ns = None):
         '''
         :param n_clusters:
         :param init: {'k-means++', 'random'}, callable or array-like of shape \
@@ -63,7 +64,7 @@ class BasicClustering:
             print('Perform K-means in distributed mode.')
         self.world_size = dist.get_world_size() if self.distributed else 1
         self.rank = dist.get_rank() if self.distributed else 0
-
+        self.ns = ns
     def fit_predict(self, X):
         pass
 
