@@ -35,8 +35,8 @@ class PyTorchKMeans(BasicClustering):
                          max_iter=max_iter,
                          tol=tol,
                          verbose=verbose,
-                         distributed=distributed)
-        self.ns = ns
+                         distributed=distributed,
+                         ns = ns)
         # 加入neural作为距离度量的选项
         self.distance_metric = {
             'euclidean': pairwise_euclidean,
