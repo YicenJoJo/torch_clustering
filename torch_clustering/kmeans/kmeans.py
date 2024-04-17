@@ -17,7 +17,7 @@ from .kmeans_plus_plus import _kmeans_plusplus
 
 
 class PyTorchKMeans(BasicClustering):
- def __init__(self,
+    def __init__(self,
                  metric='euclidean',
                  init='k-means++',
                  random_state=0,
