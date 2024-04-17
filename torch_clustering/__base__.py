@@ -87,3 +87,19 @@ def pairwise_euclidean(x1: torch.Tensor, x2: torch.Tensor, pairwise=True):
     if not pairwise:
         return ((x1 - x2) ** 2).sum(dim=1).sqrt()
     return torch.cdist(x1, x2, p=2.)
+
+def pairwise_neural_distance(distances: torch.Tensor, ns):
+    """
+    使用神经网络 ns 来处理 distances 矩阵的每一列。
+    distances: 一个 N x 10 的矩阵，其中每列是所有数据点到一个聚类中心的距离。
+    ns: 一个只能处理 N x 1 数据的神经网络。
+    """
+    processed_distances = []
+    for i in range(distances.shape[1]):  
+        column = distances[:, i:i+1]  
+        processed_column = ns(column)  
+        processed_distances.append(processed_column)
+    
+ 
+    processed_distances_matrix = torch.cat(processed_distances, dim=1)
+    return processed_distances_matrix
